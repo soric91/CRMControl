@@ -1,0 +1,33 @@
+# Local
+.DS_Store
+*.local
+*.log*
+
+# Env — only .env.example is committed
+.env
+!.env.example
+
+# Working documents: hand-offs between the frontend and the backend. Written to
+# be read once, not maintained as part of the codebase.
+*PROMPT*.md
+
+# Dist
+node_modules
+dist/
+
+# Profile
+.rspack-profile-*/
+
+# Índices derivados del código: se regeneran, y versionarlos genera conflictos
+# en cada rama sin aportar nada que el código no diga ya.
+.tokensave/
+graphify-out/
+
+# Permisos de Claude Code en esta máquina. Son de quien usa la terminal, no
+# del proyecto.
+.claude/settings.local.json
+
+# IDE
+.vscode/*
+!.vscode/extensions.json
+.idea

@@ -1,0 +1,222 @@
+/*
+ * Design tokens. Tailwind 4 is CSS-first, so this file *is* the config.
+ *
+ * Two layers on purpose:
+ *   `@theme`        static brand scales — one value, both themes.
+ *   `@theme inline` semantic aliases that point at a CSS variable, so
+ *                   switching `.dark` re-paints the whole app without
+ *                   duplicating a single utility class.
+ */
+
+/* Manual toggle wins over the media query: ThemeContext puts `.dark` (or
+   removes it) on <html>, including when the mode is "system". */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans:
+    'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+
+  /* Interactions sit in the 150–200 ms band. */
+  --default-transition-duration: 150ms;
+
+  /* Accent: a deep teal. Deliberately not Tailwind's default blue. */
+  --color-accent-50: #eefaf7;
+  --color-accent-100: #d3f2ea;
+  --color-accent-200: #a9e5d7;
+  --color-accent-300: #74d1be;
+  --color-accent-400: #41b6a1;
+  --color-accent-500: #1f9c87;
+  --color-accent-600: #157d6e;
+  --color-accent-700: #146459;
+  --color-accent-800: #145049;
+  --color-accent-900: #13433d;
+  --color-accent-950: #052e2a;
+
+  /* Greys, kept slightly cool so they sit next to the teal without clashing. */
+  --color-ink-50: #f6f8f8;
+  --color-ink-100: #eceff0;
+  --color-ink-200: #dfe4e6;
+  --color-ink-300: #c6cfd2;
+  --color-ink-400: #8b989d;
+  --color-ink-500: #6a787e;
+  --color-ink-600: #556166;
+  --color-ink-700: #3c4348;
+  --color-ink-800: #262f33;
+  --color-ink-900: #161d20;
+  --color-ink-950: #0c1113;
+}
+
+@theme inline {
+  --color-canvas: var(--app-canvas);
+  --color-surface: var(--app-surface);
+  --color-surface-raised: var(--app-surface-raised);
+  --color-surface-muted: var(--app-surface-muted);
+
+  --color-line: var(--app-line);
+  --color-line-strong: var(--app-line-strong);
+
+  --color-content: var(--app-content);
+  --color-content-muted: var(--app-content-muted);
+  --color-content-subtle: var(--app-content-subtle);
+
+  --color-accent: var(--app-accent);
+  --color-accent-hover: var(--app-accent-hover);
+  --color-accent-contrast: var(--app-accent-contrast);
+  --color-accent-soft: var(--app-accent-soft);
+  --color-accent-soft-content: var(--app-accent-soft-content);
+
+  --color-success: var(--app-success);
+  --color-success-soft: var(--app-success-soft);
+  --color-success-content: var(--app-success-content);
+
+  --color-warning: var(--app-warning);
+  --color-warning-soft: var(--app-warning-soft);
+  --color-warning-content: var(--app-warning-content);
+
+  --color-danger: var(--app-danger);
+  --color-danger-hover: var(--app-danger-hover);
+  --color-danger-soft: var(--app-danger-soft);
+  --color-danger-content: var(--app-danger-content);
+
+  --color-neutral-soft: var(--app-neutral-soft);
+  --color-neutral-content: var(--app-neutral-content);
+}
+
+:root {
+  color-scheme: light;
+
+  --app-canvas: #f4f7f7;
+  --app-surface: #ffffff;
+  --app-surface-raised: #ffffff;
+  --app-surface-muted: #eff3f3;
+
+  --app-line: #dfe4e6;
+  --app-line-strong: #c6cfd2;
+
+  --app-content: #12191c;
+  --app-content-muted: #556166;
+  --app-content-subtle: #7f8d92;
+
+  --app-accent: #157d6e;
+  --app-accent-hover: #146459;
+  --app-accent-contrast: #ffffff;
+  --app-accent-soft: #d3f2ea;
+  --app-accent-soft-content: #145049;
+
+  --app-success: #15803d;
+  --app-success-soft: #dcfce7;
+  --app-success-content: #14532d;
+
+  --app-warning: #b45309;
+  --app-warning-soft: #fef3c7;
+  --app-warning-content: #78350f;
+
+  --app-danger: #b91c1c;
+  --app-danger-hover: #991b1b;
+  --app-danger-soft: #fee2e2;
+  --app-danger-content: #7f1d1d;
+
+  --app-neutral-soft: #eceff0;
+  --app-neutral-content: #3c4348;
+}
+
+.dark {
+  color-scheme: dark;
+
+  --app-canvas: #0c1113;
+  --app-surface: #131b1e;
+  --app-surface-raised: #1a2427;
+  --app-surface-muted: #1d282b;
+
+  --app-line: #263134;
+  --app-line-strong: #374549;
+
+  --app-content: #e8eeee;
+  --app-content-muted: #9caaaf;
+  --app-content-subtle: #75858a;
+
+  --app-accent: #41b6a1;
+  --app-accent-hover: #74d1be;
+  --app-accent-contrast: #052e2a;
+  --app-accent-soft: #14433d;
+  --app-accent-soft-content: #a9e5d7;
+
+  --app-success: #4ade80;
+  --app-success-soft: #14321f;
+  --app-success-content: #bbf7d0;
+
+  --app-warning: #fbbf24;
+  --app-warning-soft: #3a2a0c;
+  --app-warning-content: #fde68a;
+
+  --app-danger: #f87171;
+  --app-danger-hover: #fca5a5;
+  --app-danger-soft: #3d1717;
+  --app-danger-content: #fecaca;
+
+  --app-neutral-soft: #232d31;
+  --app-neutral-content: #c2ccd0;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes drawer-in {
+  from {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+}
+
+@layer base {
+  /* Tailwind 4 leaves borders at `currentColor`; ours follow the theme. */
+  *,
+  ::before,
+  ::after {
+    border-color: var(--color-line);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-canvas);
+    color: var(--color-content);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* One focus treatment for the whole app, visible on every background. */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background-color: var(--color-accent-soft);
+    color: var(--color-accent-soft-content);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
