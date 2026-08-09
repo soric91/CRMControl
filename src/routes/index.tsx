@@ -1,4 +1,4 @@
-import { Navigate, createBrowserRouter } from 'react-router';
+import { Navigate, createHashRouter } from 'react-router';
 import { CrumbRoute } from '../components/layout/Breadcrumbs';
 import { AppShell } from '../components/layout/AppShell';
 import { PasswordChangeGate } from '../components/guards/PasswordChangeGate';
@@ -46,7 +46,7 @@ function NotFound() {
   );
 }
 
-export const router = createBrowserRouter([
+export const router = createHashRouter([
   { path: '/login', element: <LoginPage /> },
   {
     element: <ProtectedRoute />,

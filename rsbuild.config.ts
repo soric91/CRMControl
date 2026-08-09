@@ -18,4 +18,11 @@ export default defineConfig({
   source: {
     define: publicVars,
   },
+  html: {
+    title: 'CRM Control',
+    favicon: './public/favicon.svg',
+  },
+  output: {
+    assetPrefix: '/CRMControl/',
+  },
 });
