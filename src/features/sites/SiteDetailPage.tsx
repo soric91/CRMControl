@@ -13,7 +13,6 @@ import { usePaginatedResource } from '../../hooks/usePaginatedResource';
 import { useToast } from '../../hooks/useToast';
 import { asApiError } from '../../lib/errors';
 import {
-  formatCoordinates,
   formatDateTime,
   formatText,
 } from '../../lib/formatters';
@@ -95,14 +94,7 @@ export function SiteDetailPage() {
               value: formatText(site.responsable_nombre),
             },
             { label: 'Zona horaria', value: site.timezone },
-            {
-              label: 'Coordenadas',
-              value: (
-                <span className="tabular-nums">
-                  {formatCoordinates(site.latitud, site.longitud)}
-                </span>
-              ),
-            },
+            { label: 'Ciudad', value: formatText(site.ciudad) },
             {
               label: 'Última modificación',
               value: formatDateTime(site.updated_at),

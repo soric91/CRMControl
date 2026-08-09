@@ -10,24 +10,13 @@ interface SiteFormValues {
   nombre: string;
   direccion: string;
   timezone: string;
-  /** Kept as text so the decimal the backend sends is never floated. */
-  latitud: string;
-  longitud: string;
+  ciudad: string;
   responsable_nombre: string;
 }
 
 function orNull(value: string): string | null {
   const trimmed = value.trim();
   return trimmed === '' ? null : trimmed;
-}
-
-/** Returns an error message when the text is not a number inside the range. */
-function coordinateError(value: string, limit: number): string | undefined {
-  if (value.trim() === '') return undefined;
-  const parsed = Number(value);
-  if (Number.isNaN(parsed)) return 'Tiene que ser un número';
-  if (parsed < -limit || parsed > limit) return `Entre -${limit} y ${limit}`;
-  return undefined;
 }
 
 export interface SiteFormProps {
@@ -47,8 +36,7 @@ export function SiteForm({ clientId, site, onClose, onSaved }: SiteFormProps) {
       nombre: site?.nombre ?? '',
       direccion: site?.direccion ?? '',
       timezone: site?.timezone ?? SITE_TIMEZONE_DEFAULT,
-      latitud: site?.latitud ?? '',
-      longitud: site?.longitud ?? '',
+      ciudad: site?.ciudad ?? '',
       responsable_nombre: site?.responsable_nombre ?? '',
     },
     validate: (values) => {
@@ -58,10 +46,6 @@ export function SiteForm({ clientId, site, onClose, onSaved }: SiteFormProps) {
       if (values.timezone.trim() === '') {
         errors.timezone = 'La zona horaria es obligatoria';
       }
-      const latitud = coordinateError(values.latitud, 90);
-      if (latitud) errors.latitud = latitud;
-      const longitud = coordinateError(values.longitud, 180);
-      if (longitud) errors.longitud = longitud;
       return errors;
     },
     conflictField: 'nombre',
@@ -70,8 +54,7 @@ export function SiteForm({ clientId, site, onClose, onSaved }: SiteFormProps) {
         nombre: values.nombre.trim(),
         direccion: orNull(values.direccion),
         timezone: values.timezone.trim(),
-        latitud: orNull(values.latitud),
-        longitud: orNull(values.longitud),
+        ciudad: orNull(values.ciudad),
         responsable_nombre: orNull(values.responsable_nombre),
       };
       return site
@@ -145,30 +128,16 @@ export function SiteForm({ clientId, site, onClose, onSaved }: SiteFormProps) {
             form.setValue('timezone', event.target.value);
           }}
         />
-        <div className="grid grid-cols-2 gap-3">
-          <Input
-            id="site-latitud"
-            label="Latitud"
-            inputMode="decimal"
-            numeric
-            value={form.values.latitud}
-            error={form.errorFor('latitud')}
-            onChange={(event) => {
-              form.setValue('latitud', event.target.value);
-            }}
-          />
-          <Input
-            id="site-longitud"
-            label="Longitud"
-            inputMode="decimal"
-            numeric
-            value={form.values.longitud}
-            error={form.errorFor('longitud')}
-            onChange={(event) => {
-              form.setValue('longitud', event.target.value);
-            }}
-          />
-        </div>
+        <Input
+          id="site-ciudad"
+          label="Ciudad"
+          maxLength={120}
+          value={form.values.ciudad}
+          error={form.errorFor('ciudad')}
+          onChange={(event) => {
+            form.setValue('ciudad', event.target.value);
+          }}
+        />
         <Input
           id="site-responsable"
           label="Responsable"

@@ -181,14 +181,6 @@ export function formatText(value: string | null | undefined): string {
     : value;
 }
 
-export function formatCoordinates(
-  latitud: string | null,
-  longitud: string | null,
-): string {
-  if (!latitud || !longitud) return EMPTY_VALUE;
-  return `${latitud}, ${longitud}`;
-}
-
 /** Cómo se llama cada magnitud en el panel. Agrupa el desplegable de variables. */
 export const MAGNITUD_LABEL: Record<Magnitud, string> = {
   tension: 'Tensión',

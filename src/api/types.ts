@@ -7,7 +7,7 @@
  * array drives the `<select>` options and the union makes any label map that
  * forgets a new value a compile error.
  *
- * Decimals (`escala`, `latitud`, `longitud`) travel as strings and stay
+ * Decimals (`escala`) travel as strings and stay
  * strings all the way to the input, so JS floats never round them.
  */
 
@@ -245,8 +245,7 @@ export interface Site {
   direccion: string | null;
   /** IANA timezone name. */
   timezone: string;
-  latitud: string | null;
-  longitud: string | null;
+  ciudad: string | null;
   responsable_nombre: string | null;
   created_at: string;
   updated_at: string;
@@ -256,8 +255,7 @@ export interface SiteCreate {
   nombre: string;
   direccion?: string | null;
   timezone?: string;
-  latitud?: string | null;
-  longitud?: string | null;
+  ciudad?: string | null;
   responsable_nombre?: string | null;
 }
 

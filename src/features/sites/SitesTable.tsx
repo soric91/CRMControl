@@ -3,7 +3,7 @@ import type { Site } from '../../api';
 import { ResourceList } from '../../components/ui/ResourceList';
 import type { Column } from '../../components/ui/Table';
 import type { PaginatedResource } from '../../hooks/usePaginatedResource';
-import { formatCoordinates, formatText } from '../../lib/formatters';
+import { formatText } from '../../lib/formatters';
 
 const COLUMNS: Column<Site>[] = [
   {
@@ -30,14 +30,10 @@ const COLUMNS: Column<Site>[] = [
     render: (site) => site.timezone,
   },
   {
-    key: 'coordenadas',
-    header: 'Coordenadas',
+    key: 'ciudad',
+    header: 'Ciudad',
     onCard: false,
-    render: (site) => (
-      <span className="tabular-nums">
-        {formatCoordinates(site.latitud, site.longitud)}
-      </span>
-    ),
+    render: (site) => formatText(site.ciudad),
   },
 ];
 
