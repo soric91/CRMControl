@@ -289,7 +289,7 @@ export function EquipmentForm({
 
         <fieldset className="flex flex-col gap-4 rounded-lg border border-line p-4">
           <legend className="px-1 text-xs font-semibold tracking-wide text-content-subtle uppercase">
-            Identidad en el firmware
+            Identidad del dispositivo
           </legend>
 
           <Input
@@ -310,7 +310,7 @@ export function EquipmentForm({
             required
             maxLength={60}
             suggestions={DEVICE_TYPE_SUGGESTIONS}
-            hint="El vocabulario del firmware. Podés elegir uno conocido o escribir otro."
+            hint="Etiqueta con la que viaja en cada lectura. Podés elegir una conocida o escribir otra."
             value={form.values.device_type}
             error={form.errorFor('device_type')}
             onChange={(event) => {

@@ -144,6 +144,16 @@ export function EquipmentDetailPage() {
                 />
               ),
             },
+            {
+              label: 'Nombre del dispositivo',
+              value: (
+                <CopyValue
+                  value={equipment.nombre_dispositivo}
+                  label="Copiar el nombre del dispositivo"
+                />
+              ),
+            },
+            { label: 'Tipo de dispositivo', value: equipment.device_type },
             { label: 'ID Modbus', value: equipment.modbus_id },
             {
               label: 'Function Code',
@@ -180,16 +190,6 @@ export function EquipmentDetailPage() {
                   },
                 ]
               : []),
-            {
-              label: 'Nombre en el firmware',
-              value: (
-                <CopyValue
-                  value={equipment.nombre_dispositivo}
-                  label="Copiar el nombre del dispositivo"
-                />
-              ),
-            },
-            { label: 'Tipo en el firmware', value: equipment.device_type },
             {
               label: 'Lectura',
               value: [
