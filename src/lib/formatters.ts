@@ -8,6 +8,7 @@ import type {
   GatewayStatus,
   ModbusDataType,
   ModbusRegisterType,
+  ModbusFunction,
   ModbusTransport,
   SerialParity,
   UserRole,
@@ -55,6 +56,14 @@ export const GATEWAY_LOG_LEVEL_LABEL: Record<GatewayLogLevel, string> = {
   WARNING: 'WARNING — solo avisos',
   ERROR: 'ERROR — solo fallas',
   CRITICAL: 'CRITICAL — solo fallas graves',
+};
+
+/** El número es lo que el firmware manda al bus; el texto, para leerlo. */
+export const MODBUS_FUNCTION_LABEL: Record<ModbusFunction, string> = {
+  1: '01 · Coils',
+  2: '02 · Discrete inputs',
+  3: '03 · Holding registers',
+  4: '04 · Input registers',
 };
 
 export const MODBUS_TRANSPORT_LABEL: Record<ModbusTransport, string> = {

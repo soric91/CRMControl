@@ -7,6 +7,7 @@ import {
   MODBUS_ID_MIN,
   MODBUS_TRANSPORT,
   SERIAL_PARITY,
+  MODBUS_FUNCTION,
   TCP_PORT_DEFAULT,
   TCP_PORT_MAX,
   TCP_PORT_MIN,
@@ -17,6 +18,7 @@ import type {
   Equipment,
   EquipmentCreate,
   EquipmentType,
+  ModbusFunction,
   ModbusTransport,
   SerialParity,
 } from '../../api';
@@ -29,6 +31,7 @@ import { useResourceForm } from '../../hooks/useResourceForm';
 import { useToast } from '../../hooks/useToast';
 import {
   EQUIPMENT_TYPE_LABEL,
+  MODBUS_FUNCTION_LABEL,
   MODBUS_TRANSPORT_LABEL,
   SERIAL_PARITY_LABEL,
 } from '../../lib/formatters';
@@ -37,6 +40,7 @@ interface EquipmentFormValues {
   tipo: EquipmentType;
   /** Numbers stay text while typing so the field can be emptied. */
   modbus_id: string;
+  modbus_function: string;
   transporte: ModbusTransport;
   nombre_dispositivo: string;
   device_type: string;
@@ -112,6 +116,8 @@ export function EquipmentForm({
     initialValues: {
       tipo: equipment?.tipo ?? 'medidor',
       modbus_id: equipment ? String(equipment.modbus_id) : '',
+      // 3 por defecto: es lo que usa casi todo medidor comercial.
+      modbus_function: String(equipment?.modbus_function ?? 3),
       transporte: equipment?.transporte ?? 'rtu',
       nombre_dispositivo: equipment?.nombre_dispositivo ?? '',
       device_type: equipment?.device_type ?? '',
@@ -182,6 +188,7 @@ export function EquipmentForm({
       const payload: EquipmentCreate = {
         tipo: values.tipo,
         modbus_id: Number(values.modbus_id),
+        modbus_function: Number(values.modbus_function) as ModbusFunction,
         transporte: values.transporte,
         nombre_dispositivo: values.nombre_dispositivo.trim(),
         device_type: values.device_type.trim(),
@@ -379,6 +386,22 @@ export function EquipmentForm({
             error={form.errorFor('modbus_id')}
             onChange={(event) => {
               form.setValue('modbus_id', event.target.value);
+            }}
+          />
+
+          <Select
+            id="equipment-modbus-function"
+            label="Function Code"
+            required
+            value={form.values.modbus_function}
+            options={MODBUS_FUNCTION.map((code) => ({
+              value: String(code),
+              label: MODBUS_FUNCTION_LABEL[code],
+            }))}
+            error={form.errorFor('modbus_function')}
+            hint="Con qué código lee el firmware este equipo. Va por dispositivo: se emite una sola petición de bloque."
+            onValueChange={(value) => {
+              form.setValue('modbus_function', value);
             }}
           />
 

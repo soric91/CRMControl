@@ -61,6 +61,13 @@ export type SerialParity = (typeof SERIAL_PARITY)[number];
  * the serial ones for RTU, the network ones for TCP. The backend rejects the
  * other transport's fields instead of ignoring them.
  */
+/**
+ * Códigos de función de **lectura**. Escribir (5, 6, 15, 16) no se ofrece: el
+ * gateway lee medidores, no los opera.
+ */
+export const MODBUS_FUNCTION = [1, 2, 3, 4] as const;
+export type ModbusFunction = (typeof MODBUS_FUNCTION)[number];
+
 export const MODBUS_TRANSPORT = ['rtu', 'tcp'] as const;
 export type ModbusTransport = (typeof MODBUS_TRANSPORT)[number];
 
@@ -418,6 +425,13 @@ export interface Equipment {
   tipo: EquipmentType;
   /** Unit id on the bus. Applies to both transports. */
   modbus_id: number;
+  /**
+   * Modbus read function code: 3 holding, 4 input, 1 coils, 2 discrete.
+   *
+   * Per device, not per variable: the firmware issues one block read for the
+   * whole device.
+   */
+  modbus_function: ModbusFunction;
   transporte: ModbusTransport;
   /**
    * Titles the device's section in the firmware config and names its map
@@ -449,6 +463,7 @@ export interface Equipment {
 export interface EquipmentCreate {
   tipo: EquipmentType;
   modbus_id: number;
+  modbus_function?: ModbusFunction;
   transporte?: ModbusTransport;
   nombre_dispositivo: string;
   device_type: string;

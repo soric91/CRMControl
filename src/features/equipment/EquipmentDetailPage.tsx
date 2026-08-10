@@ -15,6 +15,7 @@ import { useToast } from '../../hooks/useToast';
 import { asApiError } from '../../lib/errors';
 import {
   EQUIPMENT_TYPE_LABEL,
+  MODBUS_FUNCTION_LABEL,
   MODBUS_TRANSPORT_LABEL,
   SERIAL_PARITY_LABEL,
   formatText,
@@ -144,6 +145,10 @@ export function EquipmentDetailPage() {
               ),
             },
             { label: 'ID Modbus', value: equipment.modbus_id },
+            {
+              label: 'Function Code',
+              value: MODBUS_FUNCTION_LABEL[equipment.modbus_function],
+            },
             { label: 'Marca', value: formatText(equipment.marca) },
             { label: 'Modelo', value: formatText(equipment.modelo) },
             {
