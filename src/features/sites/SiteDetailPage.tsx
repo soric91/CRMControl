@@ -12,10 +12,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { usePaginatedResource } from '../../hooks/usePaginatedResource';
 import { useToast } from '../../hooks/useToast';
 import { asApiError } from '../../lib/errors';
-import {
-  formatDateTime,
-  formatText,
-} from '../../lib/formatters';
+import { formatDateTime, formatText } from '../../lib/formatters';
 import { canWrite } from '../../lib/permissions';
 import { GatewayForm } from '../gateways/GatewayForm';
 import { GatewaysTable } from '../gateways/GatewaysTable';
@@ -95,6 +92,23 @@ export function SiteDetailPage() {
             },
             { label: 'Zona horaria', value: site.timezone },
             { label: 'Ciudad', value: formatText(site.ciudad) },
+            {
+              label: 'Generación propia',
+              // `null` no es "no tiene": es que nadie lo declaró y la analítica
+              // lo deduce de la energía exportada. Decir "No" ahí sería afirmar
+              // algo que no se revisó.
+              value:
+                site.tiene_generacion === null
+                  ? 'Sin declarar (se detecta automáticamente)'
+                  : site.tiene_generacion
+                    ? 'Sí'
+                    : 'No, solo consumo',
+            },
+            {
+              label: 'Capacidad instalada',
+              value:
+                site.capacidad_kwp === null ? '—' : `${site.capacidad_kwp} kWp`,
+            },
             {
               label: 'Última modificación',
               value: formatDateTime(site.updated_at),
