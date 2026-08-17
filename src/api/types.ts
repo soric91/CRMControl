@@ -254,6 +254,17 @@ export interface Site {
   timezone: string;
   ciudad: string | null;
   responsable_nombre: string | null;
+  /**
+   * Si la sede tiene generación propia (fotovoltaica) inyectando a la red.
+   *
+   * `null` NO es "no tiene": es "nadie lo declaró". La analítica lo detecta
+   * entonces a partir de la energía exportada. Marcarlo fuerza el modo, y eso
+   * cambia cómo se leen los indicadores: con generación el medidor de frontera
+   * solo ve el balance neto.
+   */
+  tiene_generacion: boolean | null;
+  /** Potencia instalada del arreglo (kWp). Decimal como string, igual que las tarifas. */
+  capacidad_kwp: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -264,6 +275,8 @@ export interface SiteCreate {
   timezone?: string;
   ciudad?: string | null;
   responsable_nombre?: string | null;
+  tiene_generacion?: boolean | null;
+  capacidad_kwp?: string | null;
 }
 
 export type SiteUpdate = Partial<SiteCreate>;
