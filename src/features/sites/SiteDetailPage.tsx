@@ -18,6 +18,7 @@ import { GatewayForm } from '../gateways/GatewayForm';
 import { GatewaysTable } from '../gateways/GatewaysTable';
 import { SiteForm } from './SiteForm';
 import { useSiteOutlet } from './SiteLayout';
+import { textoCapacidad, textoGeneracion } from './generacion';
 
 type GatewayFormTarget = Gateway | 'new' | null;
 
@@ -94,20 +95,11 @@ export function SiteDetailPage() {
             { label: 'Ciudad', value: formatText(site.ciudad) },
             {
               label: 'Generación propia',
-              // `null` no es "no tiene": es que nadie lo declaró y la analítica
-              // lo deduce de la energía exportada. Decir "No" ahí sería afirmar
-              // algo que no se revisó.
-              value:
-                site.tiene_generacion === null
-                  ? 'Sin declarar (se detecta automáticamente)'
-                  : site.tiene_generacion
-                    ? 'Sí'
-                    : 'No, solo consumo',
+              value: textoGeneracion(site.tiene_generacion),
             },
             {
               label: 'Capacidad instalada',
-              value:
-                site.capacidad_kwp === null ? '—' : `${site.capacidad_kwp} kWp`,
+              value: textoCapacidad(site.capacidad_kwp),
             },
             {
               label: 'Última modificación',
