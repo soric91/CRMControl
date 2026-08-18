@@ -14,6 +14,7 @@ import {
   render,
   screen,
   waitFor,
+  within,
 } from '@testing-library/react';
 import { http, storeSession } from '../src/api/http';
 import { ToastProvider } from '../src/context/ToastContext';
@@ -43,6 +44,46 @@ const CATALOGO = [
     magnitud: 'tension',
     fase: 'A',
     unidad: 'V',
+    acumulativa: false,
+  },
+  {
+    nombre: 'W_phsA',
+    etiqueta: 'Potencia activa fase A',
+    magnitud: 'potencia_activa',
+    fase: 'A',
+    unidad: 'W',
+    acumulativa: false,
+  },
+  {
+    nombre: 'TotW',
+    etiqueta: 'Potencia activa total',
+    magnitud: 'potencia_activa',
+    fase: 'total',
+    unidad: 'W',
+    acumulativa: false,
+  },
+  {
+    nombre: 'A_neut',
+    etiqueta: 'Corriente de neutro',
+    magnitud: 'corriente',
+    fase: 'neutro',
+    unidad: 'A',
+    acumulativa: false,
+  },
+  {
+    nombre: 'Hz',
+    etiqueta: 'Frecuencia',
+    magnitud: 'frecuencia',
+    fase: 'total',
+    unidad: 'Hz',
+    acumulativa: false,
+  },
+  {
+    nombre: 'Ind01',
+    etiqueta: 'Entrada digital 1',
+    magnitud: 'estado_digital',
+    fase: 'total',
+    unidad: '',
     acumulativa: false,
   },
   {
@@ -253,5 +294,72 @@ describe('el catálogo cerrado', () => {
     const payload = JSON.parse(String(sent ?? '{}'));
     expect(payload).not.toHaveProperty('unidad');
     expect(payload.nombre).toBe('PhV_phsA');
+  });
+});
+
+/**
+ * El desplegable de mediciones se sale de la ventana y recorta los nombres
+ * largos. Es un `<select>` nativo: el navegador dibuja la lista y ninguna
+ * regla de CSS la alcanza, así que lo único que se puede acortar es la
+ * etiqueta. Antes cada renglón repetía su magnitud —"Potencia activa ·
+ * Potencia activa fase A"— y lo que el navegador recortaba era justo el final,
+ * o sea la parte que distingue una opción de la otra.
+ */
+describe('el desplegable de mediciones', () => {
+  async function abrir() {
+    mount();
+    return await screen.findByLabelText(/^Medición/);
+  }
+
+  test('agrupa por magnitud en vez de repetirla en cada renglón', async () => {
+    await abrir();
+
+    const grupo = screen.getByRole('group', { name: 'Potencia activa' });
+    expect(within(grupo).getByRole('option', { name: 'Fase A' })).toBeInTheDocument();
+    expect(within(grupo).getByRole('option', { name: 'Total' })).toBeInTheDocument();
+  });
+
+  test('ninguna opción repite el nombre de su grupo', async () => {
+    const select = await abrir();
+
+    const repetidas = [...select.querySelectorAll('optgroup')].flatMap((grupo) =>
+      [...grupo.querySelectorAll('option')]
+        .filter((opcion) =>
+          (opcion.textContent ?? '')
+            .toLowerCase()
+            .startsWith((grupo.label ?? '').toLowerCase()),
+        )
+        // "Frecuencia" bajo "Frecuencia" es la excepción legítima: quitarle el
+        // grupo dejaría el renglón vacío.
+        .filter((opcion) => opcion.textContent !== grupo.label)
+        .map((opcion) => `${grupo.label} / ${opcion.textContent ?? ''}`),
+    );
+    expect(repetidas).toEqual([]);
+  });
+
+  test('una etiqueta que no empieza por su grupo se deja entera', async () => {
+    // "Entrada digital 1" bajo "Entradas digitales": no hay prefijo que
+    // quitar, y recortarla por parecido dejaría renglones sin sentido.
+    await abrir();
+
+    const grupo = screen.getByRole('group', { name: 'Entradas digitales' });
+    expect(
+      within(grupo).getByRole('option', { name: 'Entrada digital 1' }),
+    ).toBeInTheDocument();
+  });
+
+  test('el conector "de" no sobrevive al recorte', async () => {
+    await abrir();
+
+    const grupo = screen.getByRole('group', { name: 'Corriente' });
+    expect(within(grupo).getByRole('option', { name: 'Neutro' })).toBeInTheDocument();
+  });
+
+  test('elegir una opción sigue guardando el nombre del catálogo', async () => {
+    // La etiqueta se acortó; el valor que viaja al backend no.
+    const select = await abrir();
+    fireEvent.change(select, { target: { value: 'TotW' } });
+
+    expect(screen.getByText(/Se guarda como TotW/)).toBeInTheDocument();
   });
 });

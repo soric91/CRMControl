@@ -46,6 +46,22 @@ const NOTATION_LABEL: Record<RegisterNotation, string> = {
  */
 let lastNotation: RegisterNotation = 'decimal';
 
+/**
+ * La etiqueta del catálogo sin repetir el encabezado de su grupo.
+ *
+ * Casi todas empiezan por su magnitud —"Potencia activa fase A" bajo
+ * "Potencia activa"— y con el encabezado arriba esa parte no aporta nada,
+ * solo ancho. Se devuelve la etiqueta entera cuando no hay prefijo que quitar
+ * ("Entrada digital 1" bajo "Entradas digitales") o cuando quitarlo dejaría
+ * el renglón vacío ("Frecuencia" bajo "Frecuencia").
+ */
+function sinElGrupo(etiqueta: string, grupo: string): string {
+  if (!etiqueta.toLowerCase().startsWith(grupo.toLowerCase())) return etiqueta;
+  const resto = etiqueta.slice(grupo.length).replace(/^\s+(de\s+)?/i, '');
+  if (resto === '') return etiqueta;
+  return resto.charAt(0).toUpperCase() + resto.slice(1);
+}
+
 interface VariableFormValues {
   nombre: string;
   /** Exactly what the operator typed. The backend reads it in the notation. */
@@ -75,11 +91,19 @@ export function VariableForm({
   const { mediciones } = useVariableCatalog();
 
   // Agrupadas por magnitud y en el orden del catálogo: las tensiones juntas,
-  // las corrientes juntas, los contadores al final.
-  const opciones: SelectOption<string>[] = mediciones.map((medicion) => ({
-    value: medicion.nombre,
-    label: `${MAGNITUD_LABEL[medicion.magnitud]} · ${medicion.etiqueta}`,
-  }));
+  // las corrientes juntas, los contadores al final. El grupo es un `optgroup`
+  // de verdad y no un prefijo en cada renglón — con el prefijo, la lista
+  // repetía la magnitud en cada opción ("Potencia activa · Potencia activa
+  // fase A") y quedaba más ancha que el panel, así que el navegador recortaba
+  // justo la parte que distingue una opción de la otra.
+  const opciones: SelectOption<string>[] = mediciones.map((medicion) => {
+    const grupo = MAGNITUD_LABEL[medicion.magnitud];
+    return {
+      value: medicion.nombre,
+      label: sinElGrupo(medicion.etiqueta, grupo),
+      group: grupo,
+    };
+  });
 
   const form = useResourceForm<VariableFormValues, Variable>({
     initialValues: {
