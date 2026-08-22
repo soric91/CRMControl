@@ -36,6 +36,17 @@ export function canManageServiceAccounts(role: UserRole): boolean {
 }
 
 /**
+ * Only admins publish firmware and deploy it.
+ *
+ * Narrower than {@link canWrite} for the same reason as service credentials:
+ * whoever can do this decides what software runs on every installed device. A
+ * `tecnico` maintains equipment; choosing the fleet's firmware is not that job.
+ */
+export function canManageFirmware(role: UserRole): boolean {
+  return role === 'admin';
+}
+
+/**
  * Whether the role browses the whole platform rather than a single company.
  *
  * Only `cliente` is left out, and that role cannot reach the CRM at all: the

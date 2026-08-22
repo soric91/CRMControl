@@ -762,3 +762,96 @@ export interface EnrollmentTokenIssued {
   /** El comando completo, listo para copiar. Lo arma el servidor. */
   comando: string;
 }
+
+// ---------------------------------------------------------------------------
+// Actualización remota del firmware
+// ---------------------------------------------------------------------------
+
+/** Para quién es una versión publicada. */
+export type FirmwareChannel = 'estable' | 'beta';
+
+/**
+ * En qué punto va la actualización de un gateway.
+ *
+ * Lo reporta el equipo, no lo deduce el servidor: entre la descarga y el
+ * arranque hay un reinicio que el CRM no puede observar.
+ */
+export type FirmwareUpdateState =
+  | 'sin_pendiente'
+  | 'programada'
+  | 'descargando'
+  | 'aplicando'
+  | 'aplicada'
+  | 'fallida';
+
+export interface FirmwareRelease {
+  id: string;
+  version: string;
+  canal: FirmwareChannel;
+  sha256: string;
+  tamano_bytes: number | null;
+  notas: string;
+  /** Con fecha, la versión está retirada: no se ofrece ni se despliega. */
+  retirado_en: string | null;
+  publicado_por: string | null;
+  created_at: string;
+  /** Cuántos equipos la tienen pedida ahora mismo. */
+  gateways_apuntando: number;
+}
+
+export interface FirmwareReleaseCreate {
+  version: string;
+  canal?: FirmwareChannel;
+  sha256: string;
+  tamano_bytes?: number | null;
+  notas?: string;
+}
+
+/** Cómo va la actualización de un equipo. */
+export interface FirmwareUpdateStatus {
+  gateway_uuid: string;
+  estado: FirmwareUpdateState;
+  version_objetivo: string | null;
+  version_actual: string | null;
+  aplicar_desde: string | null;
+  intentos: number;
+  intentos_restantes: number;
+  error: string | null;
+  reportado_en: string | null;
+}
+
+/**
+ * A quién pedirle una versión. Exactamente uno de los tres destinos: el
+ * backend rechaza dos a la vez porque habría que inventar cuál gana.
+ */
+export interface RolloutCreate {
+  release_id: string;
+  gateway_ids?: string[];
+  site_id?: string;
+  client_id?: string;
+  /** `true` aplica apenas el equipo pregunte; si no, en la próxima ventana. */
+  ahora?: boolean;
+}
+
+export interface RolloutProgramado {
+  gateway_id: string;
+  numero_serie: string;
+  version_anterior: string | null;
+  aplicar_desde: string;
+  /** La versión pedida es anterior a la que corre. No se impide; se avisa. */
+  descenso: boolean;
+}
+
+export interface RolloutOmitido {
+  gateway_id: string;
+  numero_serie: string;
+  motivo: string;
+}
+
+export interface RolloutResult {
+  version: string;
+  /** False con `FIRMWARE_UPDATE_ACTIVO` apagado: nadie va a bajar la orden. */
+  flota_activa: boolean;
+  programados: RolloutProgramado[];
+  omitidos: RolloutOmitido[];
+}

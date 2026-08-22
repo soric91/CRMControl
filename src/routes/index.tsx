@@ -12,6 +12,7 @@ import { ClientDetailPage } from '../features/clients/ClientDetailPage';
 import { ClientLayout } from '../features/clients/ClientLayout';
 import { ClientsPage } from '../features/clients/ClientsPage';
 import { EquipmentDetailPage } from '../features/equipment/EquipmentDetailPage';
+import { FirmwarePage } from '../features/firmware/FirmwarePage';
 import { GatewaysFleetPage } from '../features/fleet/GatewaysFleetPage';
 import { EquipmentLayout } from '../features/equipment/EquipmentLayout';
 import { GatewayDetailPage } from '../features/gateways/GatewayDetailPage';
@@ -25,6 +26,7 @@ import { useAuth } from '../hooks/useAuth';
 import {
   LANDING_PATH,
   canBrowsePlatform,
+  canManageFirmware,
   canManageServiceAccounts,
   canManageUsers,
 } from '../lib/permissions';
@@ -125,6 +127,13 @@ export const router = createHashRouter([
                 path: 'tariffs',
                 element: <RoleGate allow={canBrowsePlatform} />,
                 children: [{ index: true, element: <TariffsPage /> }],
+              },
+              {
+                // El catálogo de versiones del firmware. Fuera de la
+                // jerarquía: una versión no es de un cliente, es de la flota.
+                path: 'firmware',
+                element: <RoleGate allow={canManageFirmware} />,
+                children: [{ index: true, element: <FirmwarePage /> }],
               },
               {
                 path: 'users',

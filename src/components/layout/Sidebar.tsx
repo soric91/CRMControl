@@ -4,6 +4,7 @@ import type { UserRole } from '../../api';
 import { cx } from '../../lib/cx';
 import {
   canBrowsePlatform,
+  canManageFirmware,
   canManageServiceAccounts,
   canManageUsers,
 } from '../../lib/permissions';
@@ -34,6 +35,12 @@ const NAV_ITEMS: NavItem[] = [
     label: 'Gateways',
     icon: <IconGateway />,
     visible: canBrowsePlatform,
+  },
+  {
+    to: '/firmware',
+    label: 'Firmware',
+    icon: <IconGateway />,
+    visible: canManageFirmware,
   },
   {
     to: '/tariffs',

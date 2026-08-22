@@ -14,12 +14,13 @@ import { usePaginatedResource } from '../../hooks/usePaginatedResource';
 import { useToast } from '../../hooks/useToast';
 import { asApiError } from '../../lib/errors';
 import { EQUIPMENT_TYPE_LABEL, formatText } from '../../lib/formatters';
-import { canWrite } from '../../lib/permissions';
+import { canManageFirmware, canWrite } from '../../lib/permissions';
 import { EquipmentForm } from '../equipment/EquipmentForm';
 import { EquipmentTable } from '../equipment/EquipmentTable';
 import { GatewayConfigPanel } from './GatewayConfigPanel';
 import { GatewayCredentialPanel } from './GatewayCredentialPanel';
 import { GatewayEnrollmentPanel } from './GatewayEnrollmentPanel';
+import { GatewayFirmwarePanel } from './GatewayFirmwarePanel';
 import { GatewayForm } from './GatewayForm';
 import { GatewayStatusBadge, LastSeen } from './GatewaysTable';
 import { useGatewayOutlet } from './GatewayLayout';
@@ -42,6 +43,9 @@ export function GatewayDetailPage() {
   );
 
   const writable = user !== null && canWrite(user.role);
+  // Desplegar firmware decide qué software corre en el equipo instalado: es
+  // un permiso más angosto que editar su ficha.
+  const firmwareManageable = user !== null && canManageFirmware(user.role);
   const basePath = `/clients/${client.id}/sites/${site.id}/gateways/${gateway.id}`;
 
   const remove = async (item: Equipment) => {
@@ -135,6 +139,8 @@ export function GatewayDetailPage() {
         writable={writable}
         onGatewayChange={setGateway}
       />
+
+      <GatewayFirmwarePanel gateway={gateway} manageable={firmwareManageable} />
 
       <GatewayCredentialPanel gateway={gateway} writable={writable} />
 

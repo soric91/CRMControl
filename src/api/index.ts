@@ -15,6 +15,7 @@ export * as sitesApi from './sites.api';
 export * as gatewaysApi from './gateways.api';
 export * as gatewayCredentialApi from './gatewayCredential.api';
 export * as enrollmentApi from './enrollment.api';
+export * as firmwareApi from './firmware.api';
 export * as equipmentApi from './equipment.api';
 export * as variablesApi from './variables.api';
 export * as variableCatalogApi from './variableCatalog.api';
