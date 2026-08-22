@@ -44,6 +44,12 @@ const BLOQUES: { prefijo: string; titulo: string; descripcion: string }[] = [
       'Qué versión instala un gateway nuevo, y de dónde la baja. Se cambia después de probarla, no al publicarla.',
   },
   {
+    prefijo: 'FIRMWARE_',
+    titulo: 'Actualización remota',
+    descripcion:
+      'Cuándo se actualizan los equipos ya instalados. La hora es local a cada sede, y con el interruptor apagado ningún equipo baja nada.',
+  },
+  {
     prefijo: 'INFLUXDB_SERVER_',
     titulo: 'InfluxDB central',
     descripcion: 'La base del servidor, donde el equipo vuelca cada tanto.',
